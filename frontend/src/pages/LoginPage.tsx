@@ -96,76 +96,73 @@ export default function LoginPage() {
     };
 
     // ---- JSX (THE UI) ----
-    // This returns the HTML-like structure that React renders to the DOM.
-    // className is React's version of the HTML `class` attribute
-    // (because `class` is a reserved word in JavaScript).
     return (
-        <div className="auth-layout">
-            {/* LEFT PANEL — Login form */}
-            <div className="auth-left">
-                {/* Inline style with animation — applies a CSS animation directly */}
-                <div className="auth-card" style={{ animation: "fadeIn 0.5s ease" }}>
-                    <h1>Welcome back</h1>
-                    <p className="subtitle">Sign in to continue building with your team</p>
+        <div className="auth-layout bg-doodle">
+            {/* Background elements (purely decorative) */}
+            <div className="absolute inset-0 z-0 opacity-[0.05] pointer-events-none bg-[url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&amp;w=2670&amp;auto=format&amp;fit=crop')] bg-cover bg-center mix-blend-multiply dark:mix-blend-overlay"></div>
 
-                    {/* FORM — onSubmit fires when the user submits (Enter key or button click) */}
-                    <form className="auth-form" onSubmit={handleSubmit}>
-                        {/* ---- EMAIL FIELD ---- */}
-                        <div className="form-group">
-                            {/* htmlFor links the label to the input (like HTML's `for` attribute) */}
-                            <label className="form-label" htmlFor="login-email">Email</label>
-                            {/* CONTROLLED INPUT:
-                                value={email} — React controls what's displayed
-                                onChange={(e) => setEmail(e.target.value)} — updates state on every keystroke
-                                This 2-way binding keeps the input value in sync with React state.
-                                In vanilla JS, you'd read the value on submit; in React, you track it in real-time. */}
-                            <input
-                                id="login-email"
-                                className="form-input"
-                                type="email"
-                                placeholder="you@university.edu"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                autoComplete="email"
-                            />
-                        </div>
-                        {/* ---- PASSWORD FIELD ---- */}
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="login-password">Password</label>
-                            <input
-                                id="login-password"
-                                className="form-input"
-                                type="password"
-                                placeholder="••••••••"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                autoComplete="current-password"
-                            />
-                        </div>
-                        {/* SUBMIT BUTTON */}
-                        {/* disabled={busy} prevents double-clicks while the API call is pending */}
-                        <button className="btn btn-primary btn-lg" type="submit" disabled={busy}>
-                            <LogIn size={18} />
-                            {/* Conditional rendering: shows different text based on `busy` state */}
-                            {busy ? "Signing in…" : "Sign In"}
-                        </button>
-                    </form>
+            <div className="auth-container" style={{ maxWidth: 480 }}>
+                <div className="auth-card-inner" style={{ minHeight: 'auto' }}>
+                    {/* LEFT PANEL — Login form */}
+                    <div className="auth-left" style={{ width: '100%', padding: '2.5rem' }}>
+                        <div className="auth-card animate-fade-in" style={{ maxWidth: '100%' }}>
+                            <h1>Converge</h1>
+                            <p className="subtitle">Where ideas meet collaborators.</p>
 
-                    {/* Link to register page — <Link> is React Router's client-side navigation */}
-                    <p className="auth-switch">
-                        Don't have an account? <Link to="/register">Create one</Link>
-                    </p>
+                            <form className="auth-form" onSubmit={handleSubmit}>
+                                <div className="form-group">
+                                    <label className="form-label" htmlFor="login-email">Email</label>
+                                    <div className="input-icon-wrapper">
+                                        <input
+                                            id="login-email"
+                                            className="form-input"
+                                            type="email"
+                                            placeholder="student@snuchennai.edu.in"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            autoComplete="email"
+                                        />
+                                        <div className="input-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label" htmlFor="login-password">Password</label>
+                                    <div className="input-icon-wrapper">
+                                        <input
+                                            id="login-password"
+                                            className="form-input"
+                                            type="password"
+                                            placeholder="Enter password"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            autoComplete="current-password"
+                                        />
+                                        <div className="input-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button className="btn btn-primary" type="submit" disabled={busy}>
+                                    <span>{busy ? "Signing in…" : "Sign in"}</span>
+                                    <LogIn size={20} />
+                                </button>
+                            </form>
+
+                            <p className="auth-switch">
+                                Don't have an account? <Link to="/register">Sign up here</Link>
+                            </p>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            {/* RIGHT PANEL — Hero/marketing text */}
-            <div className="auth-right">
-                <div className="auth-hero-text">
-                    <h2>Find Your Perfect Project Buddy</h2>
-                    <p>
-                        Converge connects you with skilled collaborators. Upload your resume,
-                        explore projects, and build something amazing together.
-                    </p>
+                <div className="footer-links">
+                    <a href="#">Help Center</a>
+                    <div className="footer-dot"></div>
+                    <a href="#">Student Guidelines</a>
+                    <div className="footer-dot"></div>
+                    <a href="#">Privacy</a>
                 </div>
             </div>
         </div>

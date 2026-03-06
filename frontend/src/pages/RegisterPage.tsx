@@ -45,7 +45,6 @@ export default function RegisterPage() {
         department: "",
         institution: "",
         availability: "medium",  // Default value
-        resumeText: "",
     });
 
     const [pdfFile, setPdfFile] = useState<File | null>(null);  // Selected PDF file
@@ -95,8 +94,12 @@ export default function RegisterPage() {
         e.preventDefault();
 
         // Client-side validation
-        if (!form.email || !form.password || !form.resumeText) {
-            addToast("Email, password and resume text are required", "error");
+        if (!form.email || !form.password) {
+            addToast("Email and password are required", "error");
+            return;
+        }
+        if (!pdfFile) {
+            addToast("Please upload your resume PDF", "error");
             return;
         }
 
@@ -127,187 +130,160 @@ export default function RegisterPage() {
 
     // ---- JSX ----
     return (
-        <div className="auth-layout">
-            <div className="auth-left">
-                <div className="auth-card" style={{ animation: "fadeIn 0.5s ease", maxWidth: 480 }}>
-                    <h1>Join Converge</h1>
-                    <p className="subtitle">Create your profile and start finding collaborators</p>
+        <div className="auth-layout bg-doodle">
+            <div className="absolute inset-0 z-0 opacity-[0.05] pointer-events-none bg-[url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&amp;w=2670&amp;auto=format&amp;fit=crop')] bg-cover bg-center mix-blend-multiply dark:mix-blend-overlay"></div>
 
-                    <form className="auth-form" onSubmit={handleSubmit}>
-                        {/* ---- ROW: Name + Email ---- */}
-                        {/* form-row is a CSS class that makes children display side by side */}
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label className="form-label" htmlFor="reg-name">Full Name</label>
-                                <input
-                                    id="reg-name"
-                                    className="form-input"
-                                    placeholder="John Doe"
-                                    value={form.name}
-                                    onChange={(e) => set("name", e.target.value)}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label" htmlFor="reg-email">Email *</label>
-                                <input
-                                    id="reg-email"
-                                    className="form-input"
-                                    type="email"
-                                    placeholder="you@university.edu"
-                                    value={form.email}
-                                    onChange={(e) => set("email", e.target.value)}
-                                    required  // HTML5 validation — browser shows error if empty on submit
-                                />
-                            </div>
+            <div className="auth-container" style={{ maxWidth: 540 }}>
+                <div className="auth-card-inner" style={{ minHeight: 'auto' }}>
+                    <div className="auth-left" style={{ width: '100%', padding: '2.5rem' }}>
+                        <div className="auth-card animate-fade-in" style={{ maxWidth: '100%' }}>
+                            <h1>Join Converge</h1>
+                            <p className="subtitle">Create your profile and start finding collaborators</p>
+
+                            <form className="auth-form" onSubmit={handleSubmit}>
+                                {/* ---- ROW: Name + Email ---- */}
+                                {/* form-row is a CSS class that makes children display side by side */}
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="reg-name">Full Name</label>
+                                        <input
+                                            id="reg-name"
+                                            className="form-input"
+                                            value={form.name}
+                                            onChange={(e) => set("name", e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="reg-email">Email *</label>
+                                        <input
+                                            id="reg-email"
+                                            className="form-input"
+                                            type="email"
+                                            value={form.email}
+                                            onChange={(e) => set("email", e.target.value)}
+                                            required  // HTML5 validation — browser shows error if empty on submit
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* ---- Password ---- */}
+                                <div className="form-group">
+                                    <label className="form-label" htmlFor="reg-password">Password *</label>
+                                    <input
+                                        id="reg-password"
+                                        className="form-input"
+                                        type="password"
+                                        placeholder="Create a strong password"
+                                        value={form.password}
+                                        onChange={(e) => set("password", e.target.value)}
+                                        required
+                                        autoComplete="new-password"
+                                    />
+                                </div>
+
+                                {/* ---- ROW: Year + Department ---- */}
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="reg-year">Year</label>
+                                        {/* <select> in React works just like a controlled input — */}
+                                        {/* value tracks the state, onChange updates it */}
+                                        <select
+                                            id="reg-year"
+                                            className="form-select"
+                                            value={form.year}
+                                            onChange={(e) => set("year", e.target.value)}
+                                        >
+                                            <option value="">Select year</option>
+                                            <option value="1st Year">1st Year</option>
+                                            <option value="2nd Year">2nd Year</option>
+                                            <option value="3rd Year">3rd Year</option>
+                                            <option value="4th Year">4th Year</option>
+                                            <option value="Graduate">Graduate</option>
+                                        </select>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="reg-dept">Department</label>
+                                        <input
+                                            id="reg-dept"
+                                            className="form-input"
+                                            placeholder="Computer Science"
+                                            value={form.department}
+                                            onChange={(e) => set("department", e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* ---- ROW: Institution + Availability ---- */}
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="reg-institution">Institution</label>
+                                        <input
+                                            id="reg-institution"
+                                            className="form-input"
+                                            placeholder="SNU"
+                                            value={form.institution}
+                                            onChange={(e) => set("institution", e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="reg-availability">Availability</label>
+                                        <select
+                                            id="reg-availability"
+                                            className="form-select"
+                                            value={form.availability}
+                                            onChange={(e) => set("availability", e.target.value)}
+                                        >
+                                            <option value="">Select availability</option>
+                                            <option value="low">Low</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="high">High</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {/* ---- Resume PDF Upload (required) ---- */}
+                                <div className="form-group">
+                                    <label className="form-label">Resume PDF *</label>
+                                    <div
+                                        className={`file-drop-zone ${dragOver ? "drag-active" : ""}`}
+                                        onClick={() => fileRef.current?.click()}
+                                        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                                        onDragLeave={() => setDragOver(false)}
+                                        onDrop={handleDrop}
+                                        style={dragOver ? { borderColor: "var(--accent)", background: "var(--accent-bg)" } : { padding: "1rem" }}
+                                    >
+                                        <Upload size={24} style={{ margin: "0 auto 0.5rem" }} />
+                                        <p style={{ fontSize: "0.8rem", margin: 0 }}>{pdfFile ? pdfFile.name : "Click or drag PDF"}</p>
+                                        <input
+                                            ref={fileRef}
+                                            type="file"
+                                            accept="application/pdf"
+                                            style={{ display: "none" }}
+                                            onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* ---- Submit Button ---- */}
+                                <button className="btn btn-primary" type="submit" disabled={busy}>
+                                    {busy ? "Creating account…" : "Create Account"}
+                                    <UserPlus size={18} style={{ marginLeft: "0.5rem" }} />
+                                </button>
+                            </form>
+
+                            <p className="auth-switch">
+                                Already have an account? <Link to="/login">Sign in</Link>
+                            </p>
                         </div>
-
-                        {/* ---- Password ---- */}
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="reg-password">Password *</label>
-                            <input
-                                id="reg-password"
-                                className="form-input"
-                                type="password"
-                                placeholder="Create a strong password"
-                                value={form.password}
-                                onChange={(e) => set("password", e.target.value)}
-                                required
-                                autoComplete="new-password"
-                            />
-                        </div>
-
-                        {/* ---- ROW: Year + Department ---- */}
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label className="form-label" htmlFor="reg-year">Year</label>
-                                {/* <select> in React works just like a controlled input — */}
-                                {/* value tracks the state, onChange updates it */}
-                                <select
-                                    id="reg-year"
-                                    className="form-select"
-                                    value={form.year}
-                                    onChange={(e) => set("year", e.target.value)}
-                                >
-                                    <option value="">Select year</option>
-                                    <option value="1st Year">1st Year</option>
-                                    <option value="2nd Year">2nd Year</option>
-                                    <option value="3rd Year">3rd Year</option>
-                                    <option value="4th Year">4th Year</option>
-                                    <option value="Graduate">Graduate</option>
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label" htmlFor="reg-dept">Department</label>
-                                <input
-                                    id="reg-dept"
-                                    className="form-input"
-                                    placeholder="Computer Science"
-                                    value={form.department}
-                                    onChange={(e) => set("department", e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        {/* ---- ROW: Institution + Availability ---- */}
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label className="form-label" htmlFor="reg-institution">Institution</label>
-                                <input
-                                    id="reg-institution"
-                                    className="form-input"
-                                    placeholder="MIT"
-                                    value={form.institution}
-                                    onChange={(e) => set("institution", e.target.value)}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label" htmlFor="reg-availability">Availability</label>
-                                <select
-                                    id="reg-availability"
-                                    className="form-select"
-                                    value={form.availability}
-                                    onChange={(e) => set("availability", e.target.value)}
-                                >
-                                    <option value="low">Low</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="high">High</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        {/* ---- Resume Text (required) ---- */}
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="reg-resume">Resume Text *</label>
-                            {/* <textarea> works the same as <input> in React — controlled via value + onChange */}
-                            <textarea
-                                id="reg-resume"
-                                className="form-textarea"
-                                placeholder="Paste your resume content here... This will be parsed by AI to build your profile."
-                                value={form.resumeText}
-                                onChange={(e) => set("resumeText", e.target.value)}
-                                rows={4}
-                                required
-                            />
-                        </div>
-
-                        {/* ---- Resume PDF Upload (optional) ---- */}
-                        <div className="form-group">
-                            <label className="form-label">Resume PDF (optional)</label>
-                            {/* FILE DROP ZONE — A custom-styled area for drag-and-drop file upload */}
-                            <div
-                                className={`file-drop-zone ${dragOver ? "drag-active" : ""}`}
-                                // Click → trigger the hidden <input type="file">
-                                onClick={() => fileRef.current?.click()}
-                                // `fileRef.current` is the actual DOM element
-                                // `?.click()` safely calls click() if the element exists
-
-                                // Drag-and-drop event handlers:
-                                onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-                                // ^ Must preventDefault to allow dropping (browser default is to open the file)
-                                onDragLeave={() => setDragOver(false)}
-                                onDrop={handleDrop}
-                                // Dynamic inline styles for drag feedback
-                                style={dragOver ? { borderColor: "var(--accent)", background: "var(--accent-bg)" } : {}}
-                            >
-                                <Upload />
-                                {/* Conditional content: show filename if selected, otherwise placeholder */}
-                                <p>{pdfFile ? pdfFile.name : "Click or drag PDF here"}</p>
-                                <p className="hint">Max 10 MB</p>
-                                {/* Hidden file input — triggered by the onClick above */}
-                                <input
-                                    ref={fileRef}
-                                    // `ref={fileRef}` connects this DOM element to the useRef variable
-                                    // So fileRef.current = this <input> element
-                                    type="file"
-                                    accept="application/pdf"
-                                    style={{ display: "none" }}
-                                    onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
-                                    // When a file is selected, grab the first file and process it
-                                />
-                            </div>
-                        </div>
-
-                        {/* ---- Submit Button ---- */}
-                        <button className="btn btn-primary btn-lg" type="submit" disabled={busy}>
-                            <UserPlus size={18} />
-                            {busy ? "Creating account…" : "Create Account"}
-                        </button>
-                    </form>
-
-                    <p className="auth-switch">
-                        Already have an account? <Link to="/login">Sign in</Link>
-                    </p>
+                    </div>
                 </div>
-            </div>
 
-            {/* RIGHT PANEL — Marketing text */}
-            <div className="auth-right">
-                <div className="auth-hero-text">
-                    <h2>Build Together, Grow Together</h2>
-                    <p>
-                        Upload your resume, let AI parse your skills, and find the perfect
-                        teammates for your next big project.
-                    </p>
+                <div className="footer-links">
+                    <a href="#">Help Center</a>
+                    <div className="footer-dot"></div>
+                    <a href="#">Student Guidelines</a>
+                    <div className="footer-dot"></div>
+                    <a href="#">Privacy</a>
                 </div>
             </div>
         </div>
