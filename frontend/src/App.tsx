@@ -30,6 +30,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 // • Route        — Maps a URL path to a component. e.g., path="/login" → <LoginPage />
 // • Navigate     — Programmatic redirect. Renders nothing but changes the URL.
 
+// Vercel Speed Insights — tracks page performance metrics
+import { SpeedInsights } from '@vercel/speed-insights/react';
+
 // Context Providers (share global state with all components):
 import { AuthProvider } from "./context/AuthContext";     // Auth state (token, profile, login/logout)
 import { ToastProvider } from "./context/ToastContext";   // Toast notifications (success/error popups)
@@ -118,6 +121,7 @@ export default function App() {
             {/* ============================================================= */}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
+          <SpeedInsights />
         </ToastProvider>
       </AuthProvider>
     </BrowserRouter>
